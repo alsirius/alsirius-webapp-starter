@@ -127,13 +127,18 @@ docker-compose up    # Development with Docker
 docker-compose up -d # Production with Docker
 ```
 
-## � Documentation
+## 📚 Documentation
 
 - [**AI_CONTEXT.md**](./AI_CONTEXT.md) - AI assistant context and project overview
 - [**ARCHITECTURE.md**](./ARCHITECTURE.md) - Technical architecture and design decisions
-- [**API Documentation**](./docs/api.md) - Backend API reference
-- [**Frontend Guide**](./docs/frontend.md) - React components and usage
-- [**Deployment Guide**](./docs/deployment.md) - Production deployment
+- [**Setup Guide**](./scripts/setup.sh) - Automated project setup script
+- [**Environment Configuration**](./.env.example) - Environment variables template
+
+### Coming Soon
+- API Documentation
+- Frontend Component Guide  
+- Deployment Guide
+- Contributing Guidelines
 
 ## 🎯 Quick Project Ideas
 
@@ -170,7 +175,7 @@ Perfect for building:
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md).
+We welcome contributions! Please see our **Contributing Guidelines** (coming soon) or feel free to submit issues and pull requests.
 
 ## 📄 License
 

@@ -1,165 +1,185 @@
-# Alsirius Auth Framework 🚀
+# Alsirius WebApp Starter 🚀
 
-A comprehensive, reusable authentication and user management framework for Node.js and React applications.
+A complete, production-ready web application starter kit with authentication, user management, and all essential features built-in. Perfect for quickly spinning up new projects!
 
 ## ✨ Features
 
-- 🔐 **JWT Authentication** - Secure token-based auth with refresh tokens
-- 👥 **User Management** - Complete user lifecycle management
+- 🔐 **Complete Authentication** - JWT with refresh tokens, email verification, password reset
+- 👥 **User Management** - Registration, profiles, admin dashboard, role-based access
 - 📧 **Invitation System** - Personalized user invitations with registration codes
-- 🎭 **Role-Based Access** - Flexible permission system
-- 📧 **Email Integration** - Multiple email providers with beautiful templates
-- 🗄️ **Database Agnostic** - SQLite, PostgreSQL, MySQL support
-- ⚛️ **React Components** - Pre-built auth forms and hooks
-- 🔧 **Easy Setup** - CLI tools and project templates
-- 📱 **Frontend Ready** - React components and client SDK
+- 🎭 **Role-Based Access** - User, Manager, Admin roles with permissions
+- 📧 **Email Integration** - SMTP setup with beautiful HTML templates
+- 🗄️ **Database Ready** - SQLite (dev), PostgreSQL/MySQL (prod) with migrations
+- ⚛️ **React Frontend** - Complete UI with forms, routing, and state management
+- 🔧 **Developer Tools** - TypeScript, ESLint, Prettier, hot reload
+- 📱 **Responsive Design** - Mobile-friendly UI with Tailwind CSS
+- 🚀 **Production Ready** - Environment configs, deployment scripts
 
 ## 🚀 Quick Start
 
-### Installation
-
-#### Option 1: Git Clone (Recommended)
-Clone the framework directly into your project:
+### Clone and Start
 
 ```bash
-# Clone into your project
-git clone https://github.com/alsirius/auth-framework.git ./libs/auth-framework
-cd ./libs/auth-framework
+# Clone the starter
+git clone https://github.com/alsirius/alsirius-webapp-starter.git my-new-app
+
+# Navigate to your new app
+cd my-new-app
+
+# Install dependencies
 npm install
-npm run build
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your settings
+
+# Start development servers
+npm run dev
 ```
 
-#### Option 2: Git Submodule (For multi-project workspaces)
+### What You Get
+
+- ✅ **Backend API** running on `http://localhost:3002`
+- ✅ **Frontend App** running on `http://localhost:3000`
+- ✅ **Database** automatically created and migrated
+- ✅ **Email Templates** ready for SMTP configuration
+- ✅ **Admin Dashboard** with user management
+- ✅ **Authentication Flow** complete with login/register/forgot password
+
+## 📁 Project Structure
+
+```
+my-new-app/
+├── 📁 backend/              # Node.js/Express API
+│   ├── src/
+│   │   ├── routes/          # API routes (auth, users, admin)
+│   │   ├── middleware/      # JWT auth middleware
+│   │   ├── database/        # Database setup and migrations
+│   │   ├── services/        # Business logic
+│   │   └── email/           # Email templates and sending
+│   └── package.json
+├── 📁 frontend/             # React/Next.js frontend
+│   ├── src/
+│   │   ├── app/            # Pages and layouts
+│   │   ├── components/     # Reusable UI components
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── services/       # API client and auth
+│   │   └── types/          # TypeScript definitions
+│   └── package.json
+├── 📁 docs/                 # Documentation and guides
+├── 📁 scripts/              # Setup and deployment scripts
+└── 📋 README.md
+```
+
+## 🛠️ Customization Guide
+
+### 1. Branding & Styling
 ```bash
-git submodule add https://github.com/alsirius/auth-framework.git libs/auth-framework
-git submodule update --init --recursive
-cd ./libs/auth-framework
-npm install
-npm run build
+# Update colors and theme
+frontend/src/styles/globals.css
+frontend/tailwind.config.js
 ```
 
-#### Option 3: Package.json Git Dependency
-Add to your `package.json`:
-```json
-{
-  "dependencies": {
-    "alsirius-auth-framework": "git+https://github.com/alsirius/auth-framework.git"
-  }
-}
+### 2. Database Configuration
+```bash
+# Update database settings
+backend/src/database/config.ts
+# Add new migrations
+backend/src/database/migrations/
 ```
 
-#### Option 4: Manual Download
-Download the ZIP from GitHub and extract to your project directory.
-
-### Basic Usage
-
-#### Backend (Node.js/Express)
-```typescript
-import { AlsiriusAuth } from './libs/auth-framework/dist/index.js';
-import express from 'express';
-
-const app = express();
-
-// Initialize auth framework
-const auth = new AlsiriusAuth({
-  database: {
-    type: 'sqlite',
-    path: './data/auth.db'
-  },
-  jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: '7d'
-  },
-  email: {
-    provider: 'smtp',
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  }
-});
-
-// Add auth routes
-app.use('/api/auth', auth.routes);
-app.use('/api/users', auth.userRoutes);
-app.use('/api/admin', auth.adminRoutes);
-
-app.listen(3000, () => {
-  console.log('🚀 Server running with Alsirius Auth Framework');
-});
+### 3. Email Setup
+```bash
+# Configure SMTP
+backend/src/email/config.ts
+# Customize templates
+backend/src/email/templates/
 ```
 
-#### Frontend (React)
-```typescript
-import { AuthProvider, useAuth } from './libs/auth-framework/packages/react/dist/index.js';
-
-// Wrap your app with AuthProvider
-function App() {
-  return (
-    <AuthProvider baseURL="http://localhost:3000">
-      <MyApp />
-    </AuthProvider>
-  );
-}
-
-// Use auth in your components
-function LoginForm() {
-  const { login, loading, error } = useAuth();
-
-  const handleSubmit = async (credentials) => {
-    try {
-      await login(credentials);
-      // User is now logged in
-    } catch (err) {
-      // Handle error
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      {/* Your login form */}
-    </form>
-  );
-}
+### 4. Add New Features
+```bash
+# Add API routes
+backend/src/routes/
+# Add pages
+frontend/src/app/
+# Add components
+frontend/src/components/
 ```
 
-## 📦 Installation Methods
+## 🚀 Deployment
 
-### Why Git-Based Distribution?
+### Development
+```bash
+npm run dev          # Start both frontend and backend
+npm run dev:backend  # Backend only
+npm run dev:frontend # Frontend only
+```
 
-| Method | Best For | Pros | Cons |
-|--------|----------|------|------|
-| **Git Clone** | Most projects | Always get latest code, full control | Manual updates, larger repo size |
-| **Git Submodule** | Multi-project workspaces | Shared across projects, version control | Complex setup, learning curve |
-| **Git Dependency** | Development, custom builds | Direct source access, flexible | Slower installs, no version locking |
-| **Manual Download** | Offline development | No network required after download | Manual updates |
+### Production
+```bash
+npm run build        # Build for production
+npm run start        # Start production servers
+```
 
-### Benefits of Git-Only Distribution
+### Docker
+```bash
+docker-compose up    # Development with Docker
+docker-compose up -d # Production with Docker
+```
 
-- ✅ **No NPM account required** for publishing
-- ✅ **Private repositories** supported
-- ✅ **Always get latest features** and fixes
-- ✅ **Full source access** for customization
-- ✅ **Fork and modify** for your specific needs
-- ✅ **Branch-based development** - use specific features
-- ✅ **Offline development** - clone once, use anywhere
+## � Documentation
 
-## 📚 Documentation
+- [**AI_CONTEXT.md**](./AI_CONTEXT.md) - AI assistant context and project overview
+- [**ARCHITECTURE.md**](./ARCHITECTURE.md) - Technical architecture and design decisions
+- [**API Documentation**](./docs/api.md) - Backend API reference
+- [**Frontend Guide**](./docs/frontend.md) - React components and usage
+- [**Deployment Guide**](./docs/deployment.md) - Production deployment
 
-For detailed documentation and examples, visit the GitHub repository:
-https://github.com/alsirius/auth-framework
+## 🎯 Quick Project Ideas
+
+Perfect for building:
+- 🏢 **SaaS Applications** - Multi-tenant with user management
+- 📊 **Admin Dashboards** - Data visualization and management
+- 🛒 **E-commerce** - User accounts and order management
+- 📚 **Learning Platforms** - Student and instructor management
+- 💼 **CRM Systems** - Customer and lead management
+- 🏥 **Healthcare Apps** - Patient and provider management
+
+## � Technology Stack
+
+### Backend
+- **Node.js** + **Express** - API framework
+- **TypeScript** - Type safety
+- **SQLite/PostgreSQL/MySQL** - Database
+- **JWT** - Authentication
+- **Nodemailer** - Email sending
+- **Bcrypt** - Password hashing
+
+### Frontend
+- **React** + **Next.js** - Framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **React Query** - Data fetching
+- **React Router** - Navigation
+
+### Development
+- **ESLint** + **Prettier** - Code quality
+- **Jest** - Testing
+- **Docker** - Containerization
+- **GitHub Actions** - CI/CD
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md).
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md).
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](./LICENSE) file for details.
 
 ## 🙏 Attribution
 
 Built with ❤️ by the [Alsirius](https://alsirius.co.uk) team.
+
+---
+
+🚀 **Ready to build your next web application? Clone this starter and start coding!**

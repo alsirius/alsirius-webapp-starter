@@ -1,180 +1,109 @@
-# Architecture - Alsirius WebApp Starter
+# Alsirius WebApp Starter Architecture & Design Principles
 
 ## Overview
+Alsirius WebApp Starter is a complete, production-ready web application template built with a clean separation between frontend and backend, emphasizing security, type safety, and rapid development.
 
-The Alsirius WebApp Starter follows a modern, scalable architecture designed for rapid development and easy maintenance. It implements a clean separation between frontend and backend with comprehensive authentication and user management systems.
+## Core Architecture Principles
 
-## System Architecture
+### 1. Separation of Concerns
+- **Frontend**: Next.js 14 with TypeScript, responsible for UI/UX only
+- **Backend**: Express.js with TypeScript, handles business logic and data
+- **Database**: SQLite with DAO pattern for data access abstraction
+- **Communication**: REST APIs with JWT-based authentication
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │    Backend      │    │   Database      │
-│   (React/Next)  │◄──►│  (Node/Express) │◄──►│ (SQLite/PG/MySQL)│
-│                 │    │                 │    │                 │
-│ - UI Components │    │ - REST API      │    │ - User Data     │
-│ - State Mgmt    │    │ - JWT Auth      │    │ - Sessions      │
-│ - Routing       │    │ - Business Logic│    │ - Migrations    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         └───────────────────────┼───────────────────────┘
-                                 │
-                    ┌─────────────────┐
-                    │   Email Service │
-                    │   (SMTP/Nodemailer)│
-                    │                 │
-                    │ - Templates     │
-                    │ - Notifications │
-                    │ - Verification  │
-                    └─────────────────┘
-```
+### 2. Security First
+- All API endpoints require JWT authentication (except public endpoints)
+- Token payload inspection for forgery detection
+- Role-based access control (RBAC)
+- Input validation and sanitization
+- CORS configuration
 
-## Frontend Architecture
+### 3. Type Safety
+- **TypeScript** throughout the stack
+- Shared type definitions between frontend and backend
+- Database models with TypeScript interfaces
+- API request/response type definitions
 
-### Technology Stack
-- **React 18** with Next.js 13+ (App Router)
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **React Query** for server state
-- **React Hook Form** for form management
-- **Zustand** for client state management
-
-### Directory Structure
-```
-frontend/src/
-├── app/                    # Next.js App Router
-│   ├── (auth)/            # Auth routes group
-│   │   ├── login/
-│   │   ├── register/
-│   │   └── forgot-password/
-│   ├── (dashboard)/       # Protected routes group
-│   │   ├── dashboard/
-│   │   ├── profile/
-│   │   └── admin/
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Home page
-├── components/             # Reusable components
-│   ├── ui/                # Base UI components
-│   ├── forms/             # Form components
-│   └── layout/            # Layout components
-├── hooks/                 # Custom hooks
-│   ├── useAuth.tsx        # Authentication hook
-│   └── useApi.tsx         # API hook
-├── services/              # External services
-│   ├── apiClient.ts       # HTTP client
-│   └── authService.ts     # Auth service
-├── types/                 # TypeScript definitions
-│   └── index.ts
-├── utils/                 # Utility functions
-└── styles/                # Global styles
-```
-
-### Component Architecture
-
-#### Authentication Flow
-1. **AuthProvider** wraps the entire app
-2. **useAuth** hook provides auth state and actions
-3. **ProtectedRoute** component guards authenticated routes
-4. **RoleBasedAccess** component for permission-based rendering
-
-#### State Management
-- **Zustand** for global client state (user preferences, UI state)
-- **React Query** for server state (API data, caching)
-- **Local State** for component-specific state
-
-#### Form Handling
-- **React Hook Form** for form validation and submission
-- **Zod** for schema validation
-- **Tailwind** for styling and responsive design
+### 4. Developer Experience
+- Hot reload for rapid development
+- Comprehensive documentation
+- AI-assisted development context
+- Automated testing and linting
 
 ## Backend Architecture
 
-### Technology Stack
-- **Node.js** with Express.js
-- **TypeScript** for type safety
-- **SQLite** (development) / PostgreSQL (production)
-- **JWT** for authentication
-- **Bcrypt** for password hashing
-- **Nodemailer** for email services
-- **Winston** for logging
-
-### Directory Structure
+### Layer Structure
 ```
 backend/src/
-├── routes/                 # API routes
-│   ├── auth.ts           # Authentication endpoints
-│   ├── users.ts          # User management
-│   ├── admin.ts          # Admin endpoints
-│   └── invitations.ts     # Invitation system
-├── middleware/            # Express middleware
-│   ├── auth.ts           # JWT authentication
-│   ├── validation.ts      # Request validation
-│   ├── errorHandler.ts   # Error handling
-│   └── rateLimit.ts      # Rate limiting
-├── services/              # Business logic
-│   ├── UserService.ts    # User operations
-│   ├── AuthService.ts    # Authentication logic
-│   ├── EmailService.ts   # Email operations
-│   └── InvitationService.ts # Invitations
-├── database/              # Database layer
-│   ├── DatabaseManager.ts # DB connection
-│   ├── migrations/        # Schema migrations
-│   ├── models/           # Data models
-│   └── seeds/            # Seed data
-├── email/                 # Email system
-│   ├── templates/        # HTML templates
-│   ├── config.ts         # SMTP configuration
-│   └── EmailManager.ts   # Email sending
-├── types/                 # TypeScript definitions
-├── utils/                 # Utility functions
-└── config/                # Configuration
+├── controllers/     # HTTP request handlers
+├── services/        # Business logic layer
+├── dao/            # Data Access Objects
+├── models/         # Database models and interfaces
+├── middleware/     # Authentication, validation, error handling
+├── routes/         # API route definitions
+├── utils/          # Helper functions
+├── types/          # TypeScript type definitions
+├── email/          # Email templates and services
+└── config/         # Configuration files
 ```
 
-### API Architecture
+### Data Flow
+1. **Request** → Middleware (auth, validation) → Controller → Service → DAO → Database
+2. **Response** → Database → DAO → Service → Controller → Response
 
-#### Route Organization
+### Authentication Strategy
+- JWT tokens with signed payload
+- Token contains: userId, role, permissions, timestamp
+- Backend inspects token signature and payload for each request
+- Refresh token mechanism for extended sessions
+
+### User Management System
+- Complete user lifecycle management
+- Role-based permissions (User, Manager, Admin)
+- Email verification and password reset
+- Invitation system for user onboarding
+
+## Frontend Architecture
+
+### Component Structure
 ```
-/api/
-├── auth/                  # Public auth endpoints
-│   ├── POST /login
-│   ├── POST /register
-│   ├── POST /logout
-│   ├── POST /refresh
-│   ├── POST /forgot-password
-│   └── POST /reset-password
-├── users/                 # Protected user endpoints
-│   ├── GET /profile
-│   ├── PUT /profile
-│   └── GET /me
-├── admin/                 # Admin-only endpoints
-│   ├── GET /users
-│   ├── POST /users
-│   ├── PUT /users/:id
-│   └── DELETE /users/:id
-└── invitations/           # Invitation endpoints
-    ├── GET / (admin)
-    ├── POST / (admin)
-    └── POST /register-with-invite
+frontend/src/
+├── app/            # Next.js app router
+│   ├── (auth)/     # Authentication routes
+│   ├── (dashboard)/# Protected routes
+│   └── api/        # API routes
+├── components/     # Reusable UI components
+│   ├── ui/         # Base components
+│   ├── forms/      # Form components
+│   └── layout/     # Layout components
+├── hooks/          # Custom React hooks
+├── services/       # API communication layer
+├── utils/          # Helper functions
+├── types/          # TypeScript definitions
+└── store/          # State management
 ```
 
-#### Middleware Stack
-1. **CORS** - Cross-origin requests
-2. **Request Logging** - API request logging
-3. **Rate Limiting** - Prevent abuse
-4. **Body Parser** - JSON parsing
-5. **Authentication** - JWT validation (protected routes)
-6. **Authorization** - Role-based access (admin routes)
-7. **Validation** - Request validation
-8. **Error Handling** - Centralized error handling
+### API Communication
+- Centralized API service with typed requests/responses
+- Automatic token injection in headers
+- Error handling and retry logic
+- Request/response interceptors
 
-#### Service Layer Pattern
-- **Controllers** handle HTTP requests/responses
-- **Services** contain business logic
-- **Repositories** handle data access
-- **Models** define data structures
+### Authentication Flow
+- AuthProvider context wrapper for global auth state
+- useAuth hook for authentication operations
+- ProtectedRoute components for route guards
+- Automatic token refresh on expiration
 
-## Database Architecture
+## Database Design
 
-### Schema Design
+### DAO Pattern Implementation
+- Abstract database operations behind interfaces
+- Each entity has its own DAO class
+- Transaction support across multiple operations
+- Connection pooling and error handling
+
+### Core Schema
 ```sql
 users
 ├── id (PK)
@@ -208,62 +137,65 @@ user_sessions
 ├── expires_at
 ├── created_at
 └── last_used_at
-
-email_verifications
-├── id (PK)
-├── user_id (FK users.id)
-├── token
-├── expires_at
-├── created_at
-└── verified_at
 ```
 
-### Migration Strategy
-- **Version-controlled migrations** with timestamps
-- **Rollback support** for each migration
-- **Seed data** for development environment
-- **Environment-specific** database configurations
-
-## Authentication Architecture
-
-### JWT Token Flow
-```
-Login Request
-    ↓
-Validate Credentials
-    ↓
-Generate Access Token (15 min)
-Generate Refresh Token (30 days)
-    ↓
-Store Refresh Token in DB
-    ↓
-Return Both Tokens to Client
-    ↓
-Client Stores Tokens (localStorage/httpOnly)
-```
-
-### Token Management
-- **Access Token**: Short-lived (15 minutes) for API requests
-- **Refresh Token**: Long-lived (30 days) for token renewal
-- **Automatic Refresh**: Client-side token refresh logic
-- **Secure Storage**: HttpOnly cookies for refresh tokens
-
-### Role-Based Access Control (RBAC)
+### Example DAO Structure
 ```typescript
-interface User {
-  role: 'user' | 'manager' | 'admin';
-  permissions: string[];
+interface UserDAO {
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  create(user: CreateUserDto): Promise<User>;
+  update(id: string, updates: UpdateUserDto): Promise<User>;
+  delete(id: string): Promise<boolean>;
 }
-
-// Permission examples:
-const permissions = {
-  'user': ['read:own_profile', 'update:own_profile'],
-  'manager': ['read:team_members', 'invite:users'],
-  'admin': ['read:all_users', 'delete:users', 'system:config']
-};
 ```
 
-## Email Architecture
+## API Design Principles
+
+### RESTful Conventions
+- Resource-based URLs: `/api/users`, `/api/auth`, `/api/invitations`
+- HTTP methods: GET, POST, PUT, DELETE
+- Consistent response format
+- Proper HTTP status codes
+
+### Response Format
+```typescript
+interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
+```
+
+### Authentication Endpoints
+- `POST /api/auth/login` - User authentication
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/logout` - Session termination
+- `POST /api/auth/refresh` - Token refresh
+- `POST /api/auth/forgot-password` - Password reset request
+- `POST /api/auth/reset-password` - Password reset confirmation
+
+### User Management Endpoints
+- `GET /api/users/profile` - Get current user profile
+- `PUT /api/users/profile` - Update user profile
+- `GET /api/admin/users` - List all users (admin)
+- `POST /api/admin/users` - Create user (admin)
+- `PUT /api/admin/users/:id` - Update user (admin)
+- `DELETE /api/admin/users/:id` - Delete user (admin)
+
+### Invitation Endpoints
+- `GET /api/admin/invitations` - List invitations (admin)
+- `POST /api/admin/invitations` - Create invitation (admin)
+- `DELETE /api/admin/invitations/:id` - Delete invitation (admin)
+- `POST /api/auth/register-with-invite` - Register with invitation
+
+## Email System Architecture
 
 ### Email Service Design
 ```
@@ -281,10 +213,10 @@ Log Result
 ```
 
 ### Template System
-- **Handlebars** for dynamic content
-- **Responsive HTML templates**
-- **Text fallback versions**
-- **Template inheritance** for consistent styling
+- Handlebars for dynamic content
+- Responsive HTML templates
+- Text fallback versions
+- Template inheritance for consistent styling
 
 ### Email Types
 - **Welcome emails** - New user registration
@@ -293,127 +225,147 @@ Log Result
 - **Invitation emails** - User onboarding
 - **System notifications** - Account changes
 
-## Security Architecture
+## Documentation Strategy
 
-### Authentication Security
-- **Password hashing** with bcrypt (salt rounds: 12)
-- **JWT secrets** from environment variables
-- **Token expiration** with automatic refresh
-- **Secure headers** (helmet.js)
-- **Rate limiting** on auth endpoints
+### 1. Code Documentation
+- JSDoc comments for all public functions
+- Type definitions serve as documentation
+- README files for each major module
 
-### Data Security
-- **Input validation** with Zod schemas
-- **SQL injection prevention** with parameterized queries
-- **XSS prevention** with content security policy
-- **CSRF protection** with same-site cookies
+### 2. API Documentation
+- OpenAPI/Swagger specification
+- Interactive API documentation
+- Example requests/responses
+
+### 3. AI Context Management
+- Central context file (`AI_CONTEXT.md`) for development guidelines
+- Type definitions as single source of truth
+- Consistent naming conventions and patterns
+
+## Development Workflow
+
+### 1. AI-Assisted Development
+- AI always references `AI_CONTEXT.md` for guidelines
+- Type-first development approach
+- Automated testing and linting
+
+### 2. Code Quality
+- ESLint + Prettier for consistent formatting
+- Unit tests for business logic
+- Integration tests for API endpoints
+- Type checking as first line of defense
+
+### 3. Development Environment
+- Hot reload for both frontend and backend
+- Environment-based configuration
+- Database migrations and seeding
+- Email testing with mock services
+
+## Technology Stack Summary
+
+### Backend
+- **Runtime**: Node.js with TypeScript
+- **Framework**: Express.js
+- **Database**: SQLite with better-sqlite3 (dev), PostgreSQL/MySQL (prod)
+- **Authentication**: JWT with bcrypt
+- **Email**: Nodemailer with SMTP
+- **Documentation**: OpenAPI/Swagger
+- **Testing**: Jest + Supertest
+
+### Frontend
+- **Framework**: Next.js 14 with TypeScript
+- **Styling**: Tailwind CSS
+- **Components**: Custom UI components
+- **State**: React hooks with Context API
+- **HTTP Client**: Native fetch with interceptors
+- **Forms**: React Hook Form with Zod validation
+- **Testing**: Jest + React Testing Library
+
+### Development Tools
+- **Code Quality**: ESLint + Prettier
+- **Type Checking**: TypeScript compiler
+- **Build Tools**: Next.js built-in bundler
+- **Environment**: Docker support
+- **CI/CD**: GitHub Actions ready
+
+## Security Considerations
+
+### Token Security
+- Short-lived access tokens (15 minutes)
+- Long-lived refresh tokens (30 days)
+- Secure token storage (httpOnly cookies)
+- Token rotation on refresh
 
 ### API Security
-- **CORS configuration** for allowed origins
-- **Request validation** for all endpoints
-- **Error sanitization** - no stack traces in production
-- **Audit logging** for sensitive operations
+- Rate limiting
+- Input validation with Zod schemas
+- SQL injection prevention
+- XSS protection
+- CORS configuration
+- Request sanitization
 
-## Performance Architecture
+### Data Protection
+- Password hashing with bcrypt (salt rounds: 12)
+- Sensitive data encryption
+- Audit logging for security events
+- Secure session management
 
-### Frontend Optimizations
-- **Code splitting** with Next.js dynamic imports
-- **Image optimization** with Next.js Image component
-- **Bundle analysis** with webpack bundle analyzer
-- **Caching strategy** with React Query
-- **Lazy loading** for heavy components
+## Performance Considerations
 
-### Backend Optimizations
-- **Database connection pooling**
-- **Query optimization** with proper indexes
-- **Response caching** for static data
-- **Compression** with gzip middleware
-- **API rate limiting** to prevent abuse
+### Backend
+- Database connection pooling
+- Query optimization with proper indexes
+- Response caching for static data
+- Pagination for large datasets
+- Email queue management
 
-### Monitoring and Logging
-- **Structured logging** with Winston
-- **Request tracing** with correlation IDs
-- **Performance metrics** collection
-- **Error tracking** integration ready
-- **Health check endpoints**
+### Frontend
+- Code splitting with Next.js dynamic imports
+- Lazy loading for heavy components
+- Image optimization with Next.js Image
+- Bundle size optimization
+- Client-side caching strategies
 
-## Deployment Architecture
+## Deployment Strategy
 
-### Development Environment
-```
-Local Machine
-├── Frontend (localhost:3000)
-├── Backend (localhost:3002)
-├── Database (SQLite)
-└── Email Service (Mailtrap)
-```
+### Development
+- Local development with hot reload
+- Docker Compose for consistent environment
+- Environment variable configuration
+- Database migrations on startup
 
-### Production Environment
-```
-Cloud Infrastructure
-├── Frontend (Vercel/Netlify)
-├── Backend (Railway/Heroku/AWS)
-├── Database (PostgreSQL)
-├── Email Service (SendGrid/SES)
-├── File Storage (AWS S3)
-└── Monitoring (Sentry/DataDog)
-```
+### Production
+- Containerized deployment (Docker)
+- Environment-based configuration
+- Health checks and monitoring
+- Database migrations
+- SSL/TLS termination
+- CDN integration for static assets
 
-### Container Architecture
-```dockerfile
-# Multi-stage build
-FROM node:18-alpine AS builder
-# Build frontend and backend
+### Scalability
+- Horizontal scaling ready (stateless backend)
+- Database read replicas support
+- Load balancer compatible
+- Microservice ready architecture
 
-FROM node:18-alpine AS runtime
-# Production runtime
-```
+## Customization Guidelines
 
-### CI/CD Pipeline
-```
-Git Push
-    ↓
-GitHub Actions
-    ↓
-Run Tests
-    ↓
-Build Applications
-    ↓
-Deploy to Staging
-    ↓
-Run E2E Tests
-    ↓
-Deploy to Production
-```
+### 1. Branding and Theming
+- Update Tailwind CSS configuration
+- Modify color schemes in CSS variables
+- Replace logos and branding assets
+- Customize email templates
 
-## Scalability Considerations
+### 2. Feature Extensions
+- Add new API routes following existing patterns
+- Create corresponding frontend pages
+- Update TypeScript types
+- Add database migrations if needed
 
-### Horizontal Scaling
-- **Stateless backend** - ready for load balancing
-- **Database read replicas** for read-heavy workloads
-- **CDN integration** for static assets
-- **Microservice ready** architecture
+### 3. Business Logic
+- Implement domain-specific services
+- Add validation schemas
+- Create custom hooks for frontend
+- Update documentation
 
-### Vertical Scaling
-- **Database optimization** with proper indexing
-- **Memory management** for large datasets
-- **CPU optimization** for intensive operations
-- **Storage scaling** with cloud providers
-
-## Future Architecture Plans
-
-### Microservices Migration
-- **Authentication Service** - Separate auth microservice
-- **User Service** - User management service
-- **Notification Service** - Email and push notifications
-- **File Service** - File upload and storage
-
-### Advanced Features
-- **GraphQL API** - Alternative to REST
-- **WebSocket Support** - Real-time features
-- **Event Sourcing** - Audit trail and event replay
-- **CQRS Pattern** - Command Query Responsibility Segregation
-
----
-
-This architecture provides a solid foundation for building scalable, maintainable web applications while keeping development velocity high through the use of modern tools and best practices.
+This architecture ensures scalability, maintainability, and security while providing clear guidelines for rapid development and customization.

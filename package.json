@@ -1,6 +1,6 @@
 {
   "name": "alsirius-auth-framework",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Alsirius Authentication Framework - Complete user management and authentication system",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

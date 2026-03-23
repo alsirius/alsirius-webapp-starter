@@ -1,5 +1,5 @@
 {
-  "name": "@alsirius/auth-framework",
+  "name": "alsirius-auth-framework",
   "version": "1.0.0",
   "description": "Alsirius Authentication Framework - Complete user management and authentication system",
   "main": "dist/index.js",

@@ -17,12 +17,9 @@ A comprehensive, reusable authentication and user management framework for Node.
 
 ### Installation
 
-#### Option 1: NPM (Recommended for public projects)
-```bash
-npm install alsirius-auth-framework
-```
+#### Option 1: Git Clone (Recommended)
+Clone the framework directly into your project:
 
-#### Option 2: Direct from Git (For latest features or private use)
 ```bash
 # Clone into your project
 git clone https://github.com/alsirius/auth-framework.git ./libs/auth-framework
@@ -31,13 +28,17 @@ npm install
 npm run build
 ```
 
-#### Option 3: Git Submodule (For multi-project setups)
+#### Option 2: Git Submodule (For multi-project workspaces)
 ```bash
 git submodule add https://github.com/alsirius/auth-framework.git libs/auth-framework
 git submodule update --init --recursive
+cd ./libs/auth-framework
+npm install
+npm run build
 ```
 
-#### Option 4: Package.json Git Dependency
+#### Option 3: Package.json Git Dependency
+Add to your `package.json`:
 ```json
 {
   "dependencies": {
@@ -46,9 +47,11 @@ git submodule update --init --recursive
 }
 ```
 
+#### Option 4: Manual Download
+Download the ZIP from GitHub and extract to your project directory.
+
 ### Basic Usage
 
-#### Using Git Clone
 ```typescript
 import { AlsiriusAuth } from './libs/auth-framework/dist/index.js';
 import express from 'express';
@@ -89,14 +92,24 @@ app.listen(3000, () => {
 
 ## 📦 Installation Methods
 
-### When to Use Each Method
+### Why Git-Based Distribution?
 
 | Method | Best For | Pros | Cons |
 |--------|----------|------|------|
-| **NPM** | Public projects, production apps | Easy updates, version locking | Requires npm account for publishing |
-| **Git Clone** | Latest features, private projects | Always get latest code, full control | Manual updates, larger repo size |
+| **Git Clone** | Most projects | Always get latest code, full control | Manual updates, larger repo size |
 | **Git Submodule** | Multi-project workspaces | Shared across projects, version control | Complex setup, learning curve |
 | **Git Dependency** | Development, custom builds | Direct source access, flexible | Slower installs, no version locking |
+| **Manual Download** | Offline development | No network required after download | Manual updates |
+
+### Benefits of Git-Only Distribution
+
+- ✅ **No NPM account required** for publishing
+- ✅ **Private repositories** supported
+- ✅ **Always get latest features** and fixes
+- ✅ **Full source access** for customization
+- ✅ **Fork and modify** for your specific needs
+- ✅ **Branch-based development** - use specific features
+- ✅ **Offline development** - clone once, use anywhere
 
 ## 📚 Documentation
 

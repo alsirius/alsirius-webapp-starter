@@ -98,9 +98,10 @@ app.listen(3000, () => {
 | **Git Submodule** | Multi-project workspaces | Shared across projects, version control | Complex setup, learning curve |
 | **Git Dependency** | Development, custom builds | Direct source access, flexible | Slower installs, no version locking |
 
-## � Documentation
+## 📚 Documentation
 
-For detailed documentation, visit: [alsirius.github.io/auth-framework](https://alsirius.github.io/auth-framework)
+For detailed documentation and examples, visit the GitHub repository:
+https://github.com/alsirius/auth-framework
 
 ## 🤝 Contributing
 

@@ -1,6 +1,6 @@
 # Alsirius Auth Framework 🚀
 
-A comprehensive, reusable authentication and user management framework for Node.js applications.
+A comprehensive, reusable authentication and user management framework for Node.js and React applications.
 
 ## ✨ Features
 
@@ -10,6 +10,7 @@ A comprehensive, reusable authentication and user management framework for Node.
 - 🎭 **Role-Based Access** - Flexible permission system
 - 📧 **Email Integration** - Multiple email providers with beautiful templates
 - 🗄️ **Database Agnostic** - SQLite, PostgreSQL, MySQL support
+- ⚛️ **React Components** - Pre-built auth forms and hooks
 - 🔧 **Easy Setup** - CLI tools and project templates
 - 📱 **Frontend Ready** - React components and client SDK
 
@@ -52,6 +53,7 @@ Download the ZIP from GitHub and extract to your project directory.
 
 ### Basic Usage
 
+#### Backend (Node.js/Express)
 ```typescript
 import { AlsiriusAuth } from './libs/auth-framework/dist/index.js';
 import express from 'express';
@@ -88,6 +90,40 @@ app.use('/api/admin', auth.adminRoutes);
 app.listen(3000, () => {
   console.log('🚀 Server running with Alsirius Auth Framework');
 });
+```
+
+#### Frontend (React)
+```typescript
+import { AuthProvider, useAuth } from './libs/auth-framework/packages/react/dist/index.js';
+
+// Wrap your app with AuthProvider
+function App() {
+  return (
+    <AuthProvider baseURL="http://localhost:3000">
+      <MyApp />
+    </AuthProvider>
+  );
+}
+
+// Use auth in your components
+function LoginForm() {
+  const { login, loading, error } = useAuth();
+
+  const handleSubmit = async (credentials) => {
+    try {
+      await login(credentials);
+      // User is now logged in
+    } catch (err) {
+      // Handle error
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Your login form */}
+    </form>
+  );
+}
 ```
 
 ## 📦 Installation Methods

@@ -6,10 +6,13 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "build:packages": "npm run build:core && npm run build:react",
+    "build:core": "tsc",
+    "build:react": "cd packages/react && npm run build",
     "dev": "tsc --watch",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build:packages"
   },
   "keywords": [
     "authentication",
